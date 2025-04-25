@@ -1,7 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 
-void main() {
+void main() async {
+  WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
+  FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
+
+  // 초기화 작업
+  await initializeApp();
+
+  // 스플래시 화면 제거
+  FlutterNativeSplash.remove();
+
   runApp(const MyApp());
+}
+
+Future<void> initializeApp() async {
+  await Future.delayed(const Duration(seconds: 2));
 }
 
 class MyApp extends StatelessWidget {
