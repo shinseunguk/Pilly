@@ -1,14 +1,20 @@
 import 'dart:convert';
 
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 import 'package:pilly/model/medicine.dart';
 
 class MedicineDataSource {
-  final String baseUrl =
-      'http://apis.data.go.kr/1471000/DrbEasyDrugInfoService/getDrbEasyDrugList?type=json&serviceKey=3onWZgRV53rnylPh1uQuLL%2BA1cMkDXX3dzbSrUs0seNWIJgKbeFQXZ2CuSayHY%2Fm9uEQKfUc%2FmzlgF4MonCGcA%3D%3D&numOfRows=100';
+  final baseUrl =
+      "http://apis.data.go.kr/1471000/DrbEasyDrugInfoService/getDrbEasyDrugList";
+  final serverKey = dotenv.env['SERVER_KEY'];
+  final type = "json";
+  final numOfRows = 20;
+  late final String url =
+      "$baseUrl?serviceKey=$serverKey&numOfRows=$numOfRows&type=$type";
 
   Future<Medicine> fetchMedicines() async {
-    final response = await http.get(Uri.parse(baseUrl));
+    final response = await http.get(Uri.parse(url));
 
     if (response.statusCode == 200) {
       final json = jsonDecode(response.body);
@@ -19,7 +25,7 @@ class MedicineDataSource {
   }
 
   Future<Medicine> searchMedicines(String query) async {
-    final response = await http.get(Uri.parse('$baseUrl&itemName=$query'));
+    final response = await http.get(Uri.parse('$url&itemName=$query'));
 
     if (response.statusCode == 200) {
       final json = jsonDecode(response.body);

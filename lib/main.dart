@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:pilly/view/navigation_bar_view.dart';
 
@@ -12,6 +13,8 @@ void main() async {
   // 스플래시 화면 제거
   FlutterNativeSplash.remove();
 
+  // 환경변수 로드
+  await dotenv.load(fileName: ".env");
   runApp(const MyApp());
 }
 
