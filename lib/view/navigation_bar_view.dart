@@ -27,14 +27,7 @@ class _NavigationBarViewState extends State<NavigationBarView>
     _tabController.addListener(() {
       _selectedIndex.value = _tabController.index;
     });
-
     _viewModel.fetchMedicineItem();
-  }
-
-  @override
-  void dispose() {
-    _tabController.dispose();
-    super.dispose();
   }
 
   @override
@@ -86,5 +79,11 @@ class _NavigationBarViewState extends State<NavigationBarView>
         ),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
   }
 }
