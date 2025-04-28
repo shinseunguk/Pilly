@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:pilly/view/widget/medicine_search_bar.dart';
+import 'package:pilly/view/list/medicine_search_bar.dart';
 import 'package:pilly/viewModel/medicine_view_model.dart';
-import 'package:pilly/view/widget/medicine_list.dart';
+import 'package:pilly/view/list/medicine_list.dart';
 
 class NavigationBarView extends StatefulWidget {
   const NavigationBarView({super.key});
