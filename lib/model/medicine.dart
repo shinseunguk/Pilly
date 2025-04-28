@@ -17,9 +17,10 @@ class Medicine {
       pageNo: json['body']['pageNo'] as int,
       numOfRows: json['body']['numOfRows'] as int,
       items:
-          (json['body']['items'] as List<dynamic>)
-              .map((item) => MedicineItem.fromJson(item))
-              .toList(),
+          (json['body']['items'] as List<dynamic>?)
+              ?.map((item) => MedicineItem.fromJson(item))
+              .toList() ??
+          [], // items가 없으면 빈 리스트 반환
     );
   }
 

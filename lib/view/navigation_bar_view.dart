@@ -1,3 +1,4 @@
+import 'dart:async'; // Timer를 사용하려면 필요합니다.
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pilly/view/list/medicine_search_bar.dart';
@@ -16,18 +17,29 @@ class _NavigationBarViewState extends State<NavigationBarView>
   final MedicineViewModel _viewModel = Get.put(MedicineViewModel());
   late TabController _tabController;
   final RxInt _selectedIndex = 0.obs;
+  final RxString _searchText = ''.obs;
+
+  Timer? _debounce; // 추가: 디바운스용 Timer
+  final Duration _debounceDuration = Duration(
+    milliseconds: 500,
+  ); // 추가: 디바운스 시간 설정
 
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(
-      length: 2,
-      vsync: this,
-    ); // Adjust the length based on the number of tabs
+    _tabController = TabController(length: 2, vsync: this);
     _tabController.addListener(() {
       _selectedIndex.value = _tabController.index;
     });
     _viewModel.fetchMedicineItem();
+  }
+
+  void handleTextChanged(String text) {
+    if (_debounce?.isActive ?? false) _debounce!.cancel(); // 기존 타이머 취소
+    _debounce = Timer(_debounceDuration, () {
+      _searchText.value = text; // 검색어 업데이트
+      _viewModel.searchMedicine(text); // 검색어로 약품 검색
+    });
   }
 
   @override
@@ -38,7 +50,10 @@ class _NavigationBarViewState extends State<NavigationBarView>
         child: Obx(() {
           switch (_selectedIndex.value) {
             case 0:
-              return MedicineSearchBar();
+              return MedicineSearchBar(
+                onTextChanged: handleTextChanged,
+                initialValue: _searchText.value,
+              );
             case 1:
               return AppBar(title: const Text('내 알약 통'), centerTitle: true);
             default:
@@ -65,7 +80,7 @@ class _NavigationBarViewState extends State<NavigationBarView>
           onTap: (index) {
             _tabController.animateTo(index);
           },
-          enableFeedback: false, // 터치 효과 제거
+          enableFeedback: false,
           items: const [
             BottomNavigationBarItem(
               icon: Icon(Icons.medication),
@@ -84,6 +99,7 @@ class _NavigationBarViewState extends State<NavigationBarView>
   @override
   void dispose() {
     _tabController.dispose();
+    _debounce?.cancel(); // 추가: 타이머 정리
     super.dispose();
   }
 }

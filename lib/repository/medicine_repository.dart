@@ -8,4 +8,9 @@ class MedicineRepository {
     final medicine = await _dataSource.fetchMedicines();
     return medicine.items;
   }
+
+  Future<List<MedicineItem>> searchMedicines(String query) async {
+    final medicine = await _dataSource.searchMedicines(query);
+    return medicine.items;
+  }
 }

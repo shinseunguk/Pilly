@@ -17,4 +17,10 @@ class MedicineViewModel {
     medicine.value = await _repository.fetchMedicines();
     isLoading.value = false; // 로딩 종료
   }
+
+  Future<void> searchMedicine(String query) async {
+    isLoading.value = true; // 로딩 시작
+    medicine.value = await _repository.searchMedicines(query);
+    isLoading.value = false; // 로딩 종료
+  }
 }

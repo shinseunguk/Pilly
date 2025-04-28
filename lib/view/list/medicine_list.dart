@@ -75,16 +75,29 @@ class MedicineList extends StatelessWidget {
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
                           ),
+                          maxLines: 1, // 제목도 말 줄임표 처리
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        const SizedBox(height: 4), // 간격 조정
+                        Text(
+                          item.entpName,
+                          style: const TextStyle(
+                            fontSize: 14,
+                            color: Colors.black54,
+                            fontWeight: FontWeight.bold,
+                          ),
+                          maxLines: 1, // 제조사 이름도 한 줄로 제한
+                          overflow: TextOverflow.ellipsis,
                         ),
                         const SizedBox(height: 8),
                         Text(
-                          "${item.efcyQesitm}\n${item.entpName}",
+                          item.efcyQesitm ?? '', // 효능 정보
                           style: const TextStyle(
                             fontSize: 14,
                             color: Colors.grey,
                           ),
-                          maxLines: 3,
-                          overflow: TextOverflow.ellipsis,
+                          maxLines: 2, // 최대 2줄로 제한
+                          overflow: TextOverflow.ellipsis, // 넘칠 경우 말 줄임표 처리
                         ),
                       ],
                     ),
