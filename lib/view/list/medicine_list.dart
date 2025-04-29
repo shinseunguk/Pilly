@@ -5,18 +5,29 @@ import 'package:pilly/view/detail/medicine_detail.dart';
 class MedicineList extends StatelessWidget {
   final RxBool isLoading; // 로딩 상태를 Rx로 받음
   final RxList<dynamic> medicine; // 약품 데이터를 Rx로 받음
+  final VoidCallback onLoadMore; // 추가 데이터를 로드하는 콜백
+  final ScrollController _scrollController = ScrollController(); // 스크롤 컨트롤러 추가
 
-  const MedicineList({
+  MedicineList({
     super.key,
     required this.isLoading,
     required this.medicine,
+    required this.onLoadMore, // 추가 데이터를 로드하는 콜백
   });
 
   @override
   Widget build(BuildContext context) {
+    // 스크롤 이벤트 감지
+    _scrollController.addListener(() {
+      if (_scrollController.position.pixels >=
+          _scrollController.position.maxScrollExtent) {
+        onLoadMore(); // 스크롤이 끝에 도달하면 추가 데이터 로드
+      }
+    });
+
     return Obx(() {
-      if (isLoading.value) {
-        return const Center(child: CircularProgressIndicator()); // 로딩 상태
+      if (isLoading.value && medicine.isEmpty) {
+        return const Center(child: CircularProgressIndicator()); // 초기 로딩 상태
       }
 
       if (medicine.isEmpty) {
@@ -24,8 +35,16 @@ class MedicineList extends StatelessWidget {
       }
 
       return ListView.builder(
-        itemCount: medicine.length,
+        controller: _scrollController, // 스크롤 컨트롤러 추가
+        itemCount: medicine.length + 1, // 로딩 인디케이터를 위한 추가 아이템
         itemBuilder: (context, index) {
+          if (index == medicine.length) {
+            // 마지막 아이템에 로딩 인디케이터 표시
+            return isLoading.value
+                ? const Center(child: CircularProgressIndicator())
+                : const SizedBox.shrink();
+          }
+
           final item = medicine[index];
           return GestureDetector(
             onTap: () {

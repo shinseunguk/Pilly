@@ -9,12 +9,12 @@ class MedicineDataSource {
       "http://apis.data.go.kr/1471000/DrbEasyDrugInfoService/getDrbEasyDrugList";
   final serverKey = dotenv.env['SERVER_KEY'];
   final type = "json";
-  final numOfRows = 20;
-  late final String url =
-      "$baseUrl?serviceKey=$serverKey&numOfRows=$numOfRows&type=$type";
+  late final String url = "$baseUrl?serviceKey=$serverKey&type=$type";
 
-  Future<Medicine> fetchMedicines() async {
-    final response = await http.get(Uri.parse(url));
+  Future<Medicine> fetchMedicines(int pageNo, int numOfRows) async {
+    final response = await http.get(
+      Uri.parse('$url&pageNo=$pageNo&numOfRows=$numOfRows'),
+    );
 
     if (response.statusCode == 200) {
       final json = jsonDecode(response.body);
@@ -24,8 +24,14 @@ class MedicineDataSource {
     }
   }
 
-  Future<Medicine> searchMedicines(String query) async {
-    final response = await http.get(Uri.parse('$url&itemName=$query'));
+  Future<Medicine> searchMedicines(
+    int pageNo,
+    int numOfRows,
+    String query,
+  ) async {
+    final response = await http.get(
+      Uri.parse('$url&pageNo=$pageNo&numOfRows=$numOfRows&itemName=$query'),
+    );
 
     if (response.statusCode == 200) {
       final json = jsonDecode(response.body);

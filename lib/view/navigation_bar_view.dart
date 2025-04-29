@@ -21,7 +21,7 @@ class _NavigationBarViewState extends State<NavigationBarView>
 
   Timer? _debounce; // 추가: 디바운스용 Timer
   final Duration _debounceDuration = Duration(
-    milliseconds: 500,
+    milliseconds: 1000,
   ); // 추가: 디바운스 시간 설정
 
   @override
@@ -31,15 +31,44 @@ class _NavigationBarViewState extends State<NavigationBarView>
     _tabController.addListener(() {
       _selectedIndex.value = _tabController.index;
     });
-    _viewModel.fetchMedicineItem();
+    _viewModel.fetchMedicine();
   }
 
   void handleTextChanged(String text) {
     if (_debounce?.isActive ?? false) _debounce!.cancel(); // 기존 타이머 취소
     _debounce = Timer(_debounceDuration, () {
       _searchText.value = text; // 검색어 업데이트
-      _viewModel.searchMedicine(text); // 검색어로 약품 검색
+
+      _viewModel.medicineItem.clear(); // 기존 데이터 초기화
+      _viewModel.pageNo = 1; // 페이지 번호 초기화
+      _viewModel.totalCount = 0; // 총 개수 초기화
+
+      if (text.isEmpty) {
+        _viewModel.fetchMedicine(); // 약품 목록 새로고침(검색어가 없을 때)
+      } else {
+        _viewModel.searchMedicine(text); // 약품 목록 새로고침(검색어가 있을 때)
+      }
     });
+  }
+
+  void handleLoadMore() {
+    if (!_viewModel.isLoading.value) {
+      if (_viewModel.medicineItem.length < _viewModel.totalCount) {
+        if (_debounce?.isActive ?? false) return; // 디바운스 적용
+        _debounce = Timer(_debounceDuration, () {
+          _viewModel.pageNo++;
+        });
+        // _viewModel.isLoading.value = true; // 로딩 시작
+        // _viewModel.fetchMedicineItem().then((_) {
+        //   _viewModel.isLoading.value = false; // 로딩 종료
+        // });
+        if (_searchText.value.isEmpty) {
+          _viewModel.fetchMedicine(); // 페이지네이션 로드(검색어가 없을 때)
+        } else {
+          _viewModel.searchMedicine(_searchText.value); // 페이지네이션 로드(검색어가 있을 때)
+        }
+      }
+    }
   }
 
   @override
@@ -66,7 +95,8 @@ class _NavigationBarViewState extends State<NavigationBarView>
           case 0:
             return MedicineList(
               isLoading: _viewModel.isLoading,
-              medicine: _viewModel.medicine,
+              medicine: _viewModel.medicineItem,
+              onLoadMore: handleLoadMore, // 페이지네이션 콜백 전달
             );
           case 1:
             return const Center(child: Text('내 알약 통'));

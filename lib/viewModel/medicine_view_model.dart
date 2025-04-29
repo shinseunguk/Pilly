@@ -4,23 +4,37 @@ import 'package:pilly/repository/medicine_repository.dart';
 
 class MedicineViewModel {
   late final MedicineRepository _repository;
-  var medicine = <MedicineItem>[].obs;
+  var medicineItem = <MedicineItem>[].obs;
   var isLoading = true.obs; // 로딩 상태 추가
+  var totalCount = 0;
+  var pageNo = 1;
+  var numOfRows = 20;
 
   MedicineViewModel() {
     _repository = MedicineRepository();
   }
 
-  Future<void> fetchMedicineItem() async {
+  Future<void> fetchMedicine() async {
     isLoading.value = true; // 로딩 시작
-    // await Future.delayed(const Duration(seconds: 2));
-    medicine.value = await _repository.fetchMedicines();
+
+    final medicine = await _repository.fetchMedicines(pageNo, numOfRows);
+    totalCount = medicine.totalCount;
+    medicineItem.addAll(medicine.items);
+
     isLoading.value = false; // 로딩 종료
   }
 
   Future<void> searchMedicine(String query) async {
     isLoading.value = true; // 로딩 시작
-    medicine.value = await _repository.searchMedicines(query);
+
+    final medicine = await _repository.searchMedicines(
+      pageNo,
+      numOfRows,
+      query,
+    );
+    totalCount = medicine.totalCount;
+    medicineItem.addAll(medicine.items);
+
     isLoading.value = false; // 로딩 종료
   }
 }

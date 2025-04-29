@@ -4,13 +4,21 @@ import 'package:pilly/model/medicine.dart';
 class MedicineRepository {
   final MedicineDataSource _dataSource = MedicineDataSource();
 
-  Future<List<MedicineItem>> fetchMedicines() async {
-    final medicine = await _dataSource.fetchMedicines();
-    return medicine.items;
+  Future<Medicine> fetchMedicines(int pageNo, int numOfRows) async {
+    final medicine = await _dataSource.fetchMedicines(pageNo, numOfRows);
+    return medicine;
   }
 
-  Future<List<MedicineItem>> searchMedicines(String query) async {
-    final medicine = await _dataSource.searchMedicines(query);
-    return medicine.items;
+  Future<Medicine> searchMedicines(
+    int pageNo,
+    int numOfRows,
+    String query,
+  ) async {
+    final medicine = await _dataSource.searchMedicines(
+      pageNo,
+      numOfRows,
+      query,
+    );
+    return medicine;
   }
 }
