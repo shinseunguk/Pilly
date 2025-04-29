@@ -30,8 +30,16 @@ class _NavigationBarViewState extends State<NavigationBarView>
     _tabController = TabController(length: 2, vsync: this);
     _tabController.addListener(() {
       _selectedIndex.value = _tabController.index;
+
+      // 탭 변경 후 ViewModel 메서드 호출
+      if (_tabController.index == 0) {
+        _viewModel.fetchMedicine(); // 첫 번째 탭: 의약품 리스트 갱신
+      } else if (_tabController.index == 1) {
+        _viewModel.fetchMyMedicine(); // 두 번째 탭: 내 알약 통 갱신
+      }
     });
     _viewModel.fetchMedicine();
+    _viewModel.fetchMyMedicine();
   }
 
   void handleTextChanged(String text) {
@@ -99,11 +107,19 @@ class _NavigationBarViewState extends State<NavigationBarView>
               onLoadMore: handleLoadMore, // 페이지네이션 콜백 전달
               onFavoriteToggle: (item) {
                 // 즐겨찾기 버튼 콜백
-                _viewModel.toggleMyMedicine(item);
+                _viewModel.toggleMyMedicineList(item);
               },
             );
           case 1:
-            return const Center(child: Text('내 알약 통'));
+            return MedicineList(
+              isLoading: _viewModel.isLoading,
+              medicine: _viewModel.myMedicineItem,
+              onLoadMore: () {},
+              onFavoriteToggle: (item) {
+                // 즐겨찾기 버튼 콜백
+                _viewModel.toggleMyMedicineList(item);
+              },
+            );
           default:
             return const Center(child: Text('Unknown tab'));
         }

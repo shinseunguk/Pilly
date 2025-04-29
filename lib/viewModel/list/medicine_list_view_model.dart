@@ -5,6 +5,7 @@ import 'package:pilly/repository/medicine_repository.dart';
 class MedicineListViewModel {
   late final MedicineRepository _repository;
   var medicineItem = <MedicineItem>[].obs;
+  var myMedicineItem = <MedicineItem>[].obs;
   var isLoading = true.obs; // 로딩 상태 추가
   var totalCount = 0;
   var pageNo = 1;
@@ -54,20 +55,44 @@ class MedicineListViewModel {
     isLoading.value = false; // 로딩 종료
   }
 
-  Future<void> toggleMyMedicine(MedicineItem selectedMedicineItem) async {
+  Future<void> toggleMyMedicineList(MedicineItem selectedMedicineItem) async {
     await _repository.toggleMyMedicine(selectedMedicineItem);
 
-    final index = medicineItem.indexWhere(
+    // Update in medicineItem list
+    final medicineIndex = medicineItem.indexWhere(
       (item) => item.itemSeq == selectedMedicineItem.itemSeq,
     );
-    if (index != -1) {
-      medicineItem[index].isFavorite = !medicineItem[index].isFavorite;
+    if (medicineIndex != -1) {
+      medicineItem[medicineIndex].isFavorite =
+          !medicineItem[medicineIndex].isFavorite;
       medicineItem.refresh(); // Update the observable list
+    }
+
+    // Update in myMedicineItem list
+    final myMedicineIndex = myMedicineItem.indexWhere(
+      (item) => item.itemSeq == selectedMedicineItem.itemSeq,
+    );
+    if (myMedicineIndex != -1) {
+      myMedicineItem[myMedicineIndex].isFavorite =
+          !myMedicineItem[myMedicineIndex].isFavorite;
+      myMedicineItem.refresh(); // Update the observable list
     }
   }
 
   Future<List<MedicineItem>> getMyMedicine() async {
     final myMedicineList = await _repository.getMyMedicine();
     return myMedicineList;
+  }
+
+  Future<void> fetchMyMedicine() async {
+    isLoading.value = true; // 로딩 시작
+
+    final myMedicineList = await _repository.getMyMedicine();
+    myMedicineItem.assignAll(myMedicineList);
+    for (var item in myMedicineItem) {
+      item.isFavorite = true;
+    }
+
+    isLoading.value = false; // 로딩 종료
   }
 }
