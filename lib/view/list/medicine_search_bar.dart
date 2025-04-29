@@ -25,6 +25,18 @@ class MedicineSearchBar extends StatelessWidget implements PreferredSizeWidget {
             label: const Text('의약품명 검색'),
             hintText: '의약품명으로 검색',
             prefixIcon: const Icon(Icons.search),
+            suffixIcon:
+                controller
+                        .text
+                        .isNotEmpty // 텍스트가 있을 때만 X 버튼 표시
+                    ? IconButton(
+                      icon: const Icon(Icons.clear),
+                      onPressed: () {
+                        controller.clear(); // 텍스트 필드 비우기
+                        onTextChanged(''); // 콜백에 빈 문자열 전달
+                      },
+                    )
+                    : null,
             border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
           ),
         ),
