@@ -32,6 +32,10 @@ class Medicine {
       'items': items.map((item) => item.toJson()).toList(),
     };
   }
+
+  List<Map<String, dynamic>> itemsToJson() {
+    return items.map((item) => item.toJson()).toList();
+  }
 }
 
 class MedicineItem {
@@ -49,6 +53,7 @@ class MedicineItem {
   final String updateDe; // 업데이트 날짜
   final String? itemImage; // 약품 이미지 URL
   final String bizrno; // 사업자 등록번호
+  var isFavorite = false; // 즐겨찾기 여부
 
   MedicineItem({
     required this.entpName,

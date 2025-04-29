@@ -38,6 +38,7 @@ dependencies:
   http:
   get:
   flutter_dotenv:
+  shared_preferences:
 
 dev_dependencies:
   flutter_test:

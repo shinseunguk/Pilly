@@ -21,4 +21,13 @@ class MedicineRepository {
     );
     return medicine;
   }
+
+  Future<void> toggleMyMedicine(MedicineItem selectedMedicineItem) async {
+    await _dataSource.toggleMyMedicine(selectedMedicineItem);
+  }
+
+  Future<List<MedicineItem>> getMyMedicine() async {
+    final myMedicineList = await _dataSource.getMyMedicine();
+    return myMedicineList;
+  }
 }

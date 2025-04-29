@@ -1,9 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:pilly/model/medicine.dart';
 
-class MedicineDetail extends StatelessWidget {
-  final dynamic item; // 선택된 약품 데이터
+class MedicineDetailView extends StatelessWidget {
+  final MedicineItem item; // 선택된 약품 데이터
+  final void Function(MedicineItem item) onFavoriteToggle; // 즐겨찾기 버튼 콜백
+  final RxBool isFavorite; // Rx 상태로 즐겨찾기 상태 관리
 
-  const MedicineDetail({super.key, required this.item});
+  MedicineDetailView({
+    super.key,
+    required this.item,
+    required this.onFavoriteToggle,
+  }) : isFavorite = item.isFavorite.obs; // 초기값 설정
 
   @override
   Widget build(BuildContext context) {
@@ -20,14 +28,27 @@ class MedicineDetail extends StatelessWidget {
           maxLines: 2, // 한 줄로 제한
         ),
         actions: [
-          IconButton(
-            icon: const Icon(Icons.favorite_border),
-            onPressed: () {
-              // 버튼 클릭 시 동작 추가
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text("${item.itemName}, 내 알약 통에 추가됨")),
-              );
-            },
+          Obx(
+            () => IconButton(
+              icon: Icon(
+                isFavorite.value ? Icons.favorite : Icons.favorite_border,
+                color: isFavorite.value ? Colors.red : Colors.grey,
+              ),
+              onPressed: () {
+                // 즐겨찾기 상태 토글
+                onFavoriteToggle(item); // 즐겨찾기 토글 콜백 호출
+                isFavorite.value = !isFavorite.value;
+
+                // 상태 변경 후 스낵바 표시
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(
+                      "'${item.itemName}'이(가) ${isFavorite.value ? '내 알약 통에 추가되었습니다.' : '내 알약 통에서 삭제되었습니다.'}",
+                    ),
+                  ),
+                );
+              },
+            ),
           ),
         ],
       ),

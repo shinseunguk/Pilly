@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:pilly/view/detail/medicine_detail.dart';
+import 'package:pilly/model/medicine.dart';
+import 'package:pilly/view/detail/medicine_detail_view.dart';
 
 class MedicineList extends StatelessWidget {
   final RxBool isLoading; // 로딩 상태를 Rx로 받음
   final RxList<dynamic> medicine; // 약품 데이터를 Rx로 받음
   final VoidCallback onLoadMore; // 추가 데이터를 로드하는 콜백
+  final void Function(MedicineItem item) onFavoriteToggle; // 즐겨찾기 버튼 콜백
   final ScrollController _scrollController = ScrollController(); // 스크롤 컨트롤러 추가
 
   MedicineList({
@@ -13,6 +15,7 @@ class MedicineList extends StatelessWidget {
     required this.isLoading,
     required this.medicine,
     required this.onLoadMore, // 추가 데이터를 로드하는 콜백
+    required this.onFavoriteToggle, // 즐겨찾기 버튼 콜백 추가
   });
 
   @override
@@ -52,7 +55,11 @@ class MedicineList extends StatelessWidget {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => MedicineDetail(item: item),
+                  builder:
+                      (context) => MedicineDetailView(
+                        item: item,
+                        onFavoriteToggle: onFavoriteToggle, // 즐겨찾기 버튼 콜백 전달
+                      ),
                 ),
               );
             },
@@ -122,10 +129,20 @@ class MedicineList extends StatelessWidget {
                     ),
                   ),
                   IconButton(
-                    icon: const Icon(Icons.favorite_border, color: Colors.grey),
+                    icon: Icon(
+                      item.isFavorite ? Icons.favorite : Icons.favorite_border,
+                      color: item.isFavorite ? Colors.red : Colors.grey,
+                    ),
                     onPressed: () {
                       // 즐겨찾기 버튼 클릭 이벤트 처리 (추후 구현)
-                      print("${item.itemName} added to favorites");
+                      onFavoriteToggle(item); // 즐겨찾기 토글 콜백 호출
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(
+                            "'${item.itemName}'이(가) ${item.isFavorite ? '내 알약 통에서 삭제되었습니다.' : '내 알약 통에 추가되었습니다.'}",
+                          ),
+                        ),
+                      );
                     },
                   ),
                 ],

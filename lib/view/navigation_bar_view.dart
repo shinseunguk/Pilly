@@ -2,8 +2,8 @@ import 'dart:async'; // Timer를 사용하려면 필요합니다.
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pilly/view/list/medicine_search_bar.dart';
-import 'package:pilly/viewModel/medicine_view_model.dart';
-import 'package:pilly/view/list/medicine_list.dart';
+import 'package:pilly/viewModel/list/medicine_list_view_model.dart';
+import 'package:pilly/view/list/medicine_list_view.dart';
 
 class NavigationBarView extends StatefulWidget {
   const NavigationBarView({super.key});
@@ -14,7 +14,7 @@ class NavigationBarView extends StatefulWidget {
 
 class _NavigationBarViewState extends State<NavigationBarView>
     with SingleTickerProviderStateMixin {
-  final MedicineViewModel _viewModel = Get.put(MedicineViewModel());
+  final MedicineListViewModel _viewModel = Get.put(MedicineListViewModel());
   late TabController _tabController;
   final RxInt _selectedIndex = 0.obs;
   final RxString _searchText = ''.obs;
@@ -97,6 +97,10 @@ class _NavigationBarViewState extends State<NavigationBarView>
               isLoading: _viewModel.isLoading,
               medicine: _viewModel.medicineItem,
               onLoadMore: handleLoadMore, // 페이지네이션 콜백 전달
+              onFavoriteToggle: (item) {
+                // 즐겨찾기 버튼 콜백
+                _viewModel.toggleMyMedicine(item);
+              },
             );
           case 1:
             return const Center(child: Text('내 알약 통'));
