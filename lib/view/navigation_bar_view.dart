@@ -83,7 +83,7 @@ class _NavigationBarViewState extends State<NavigationBarView>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: PreferredSize(
-        preferredSize: const Size.fromHeight(80),
+        preferredSize: const Size.fromHeight(70),
         child: Obx(() {
           switch (_selectedIndex.value) {
             case 0:

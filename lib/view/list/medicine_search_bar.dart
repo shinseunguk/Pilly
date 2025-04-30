@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class MedicineSearchBar extends StatelessWidget implements PreferredSizeWidget {
+class MedicineSearchBar extends StatelessWidget {
   final ValueChanged<String> onTextChanged; // 텍스트 변경 이벤트 콜백
   final TextEditingController controller; // TextEditingController 추가
 
@@ -11,9 +11,6 @@ class MedicineSearchBar extends StatelessWidget implements PreferredSizeWidget {
   }) : controller = TextEditingController(text: initialValue); // 초기값 설정
 
   @override
-  Size get preferredSize => const Size.fromHeight(80);
-
-  @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Padding(
@@ -21,8 +18,8 @@ class MedicineSearchBar extends StatelessWidget implements PreferredSizeWidget {
         child: TextField(
           controller: controller, // TextEditingController 연결
           onChanged: onTextChanged, // 텍스트 변경 이벤트 처리
+          style: const TextStyle(fontSize: 14), // 글씨 크기 조정
           decoration: InputDecoration(
-            label: const Text('의약품명 검색'),
             hintText: '의약품명으로 검색',
             prefixIcon: const Icon(Icons.search),
             suffixIcon:
