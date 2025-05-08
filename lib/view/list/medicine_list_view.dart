@@ -29,11 +29,11 @@ class MedicineList extends StatelessWidget {
     });
 
     return Obx(() {
-      if (isLoading.value && medicine.isEmpty) {
+      if (isLoading.value) {
         return const Center(child: CircularProgressIndicator()); // 초기 로딩 상태
-      }
-
-      if (medicine.isEmpty) {
+      } else if (!isLoading.value && medicine.isEmpty) {
+        return const Center(child: Text('No data available')); // 데이터 없음 상태
+      } else if (medicine.isEmpty) {
         return const Center(child: Text('No data available')); // 데이터 없음 상태
       }
 
@@ -87,8 +87,32 @@ class MedicineList extends StatelessWidget {
                         width: 100,
                         height: 100,
                         fit: BoxFit.fitWidth,
+                        loadingBuilder: (context, child, loadingProgress) {
+                          if (loadingProgress == null) return child;
+                          return SizedBox(
+                            width: 100,
+                            height: 100,
+                            child: Center(
+                              child: CircularProgressIndicator(
+                                value:
+                                    loadingProgress.expectedTotalBytes != null
+                                        ? loadingProgress
+                                                .cumulativeBytesLoaded /
+                                            (loadingProgress
+                                                    .expectedTotalBytes ??
+                                                1)
+                                        : null,
+                              ),
+                            ),
+                          );
+                        },
                       )
-                      : Image.asset('assets/images/image_coming_soon.png'),
+                      : Image.asset(
+                        'assets/images/image_coming_soon.png',
+                        width: 100,
+                        height: 100,
+                        fit: BoxFit.fitWidth,
+                      ),
                   const SizedBox(width: 16),
                   Expanded(
                     child: Column(
