@@ -832,7 +832,7 @@
 
 | 변경 전 | 변경 후 | 
 |----------| ----------|
-|![Simulator Screenshot - iPhone 16 Pro Max - 2025-05-08 at 10 56 32](https://github.com/user-attachments/assets/46317200-1193-4dae-afc5-cdc3790118de)|![Simulator Screenshot - iPhone 16 Pro Max - 2025-05-08 at 10 55 56](https://github.com/user-attachments/assets/02fba2ab-6079-46b0-b6d3-c4edc6f01298)|
+|![Simulator Screenshot - iPhone 16 Pro Max - 2025-05-08 at 10 55 56](https://github.com/user-attachments/assets/02fba2ab-6079-46b0-b6d3-c4edc6f01298)||![Simulator Screenshot - iPhone 16 Pro Max - 2025-05-08 at 10 56 32](https://github.com/user-attachments/assets/46317200-1193-4dae-afc5-cdc3790118de)
 
 
 
