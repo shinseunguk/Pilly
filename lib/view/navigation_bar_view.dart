@@ -63,9 +63,8 @@ class _NavigationBarViewState extends State<NavigationBarView>
     if (!_viewModel.isLoading.value) {
       if (_viewModel.medicineItem.length < _viewModel.totalCount) {
         if (_debounce?.isActive ?? false) return; // 디바운스 적용
-        _debounce = Timer(_debounceDuration, () {
-          _viewModel.pageNo++;
-        });
+        _debounce = Timer(_debounceDuration, () {});
+        _viewModel.pageNo++;
         // _viewModel.isLoading.value = true; // 로딩 시작
         // _viewModel.fetchMedicineItem().then((_) {
         //   _viewModel.isLoading.value = false; // 로딩 종료
