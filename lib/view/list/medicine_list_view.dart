@@ -29,7 +29,7 @@ class MedicineList extends StatelessWidget {
     });
 
     return Obx(() {
-      if (isLoading.value) {
+      if (isLoading.value && medicine.isEmpty) {
         return const Center(child: CircularProgressIndicator()); // 초기 로딩 상태
       } else if (!isLoading.value && medicine.isEmpty) {
         return const Center(child: Text('No data available')); // 데이터 없음 상태
